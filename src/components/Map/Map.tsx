@@ -54,7 +54,7 @@ export function Map({
             rotationEnabled: false,
             minScale: 150000000,
           };
-          if (center[1] < 60) {
+          if (center[1] < -60) {
             applyAntarcticHeadingCorrection(view);
           }
         }}
