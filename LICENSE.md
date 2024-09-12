@@ -1,8 +1,4 @@
-# Assets Tracking Service - Embeddable Asset Maps
-
-Interactive maps designed for embedding the position of assets tracked in the Assets Tracking Service in other applications.
-
-## License
+# MIT License
 
 Copyright (c) 2024 UK Research and Innovation (UKRI), British Antarctic Survey (BAS).
 
