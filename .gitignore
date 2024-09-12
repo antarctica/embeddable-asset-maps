@@ -26,3 +26,6 @@ dist-ssr
 ## Panda
 styled-system
 styled-system-studio
+
+# Terraform
+/support/provisioning/.terraform
