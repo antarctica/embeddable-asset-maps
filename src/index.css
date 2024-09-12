@@ -1,0 +1,33 @@
+@layer reset, base, tokens, recipes, utilities;
+@import "https://js.arcgis.com/4.30/@arcgis/core/assets/esri/themes/light/main.css";
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+#ref-globe .esri-attribution{
+  display: none;
+}
+
+.esri-ui-inner-container .esri-component{
+  box-shadow:none !important
+}
+
+
+
+@keyframes progress-circle {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 314;
+  }
+}
+
+.progress-circle {
+  animation: progress-circle 3s linear infinite;
+  stroke-dasharray: 70 87;
+}
+

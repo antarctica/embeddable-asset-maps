@@ -1,6 +1,23 @@
-# Assets Tracking Service - Embeddable Asset Maps
+# BAS Asset Tracking Map
 
-Interactive maps designed for embedding the position of assets tracked in the Assets Tracking Service in other applications.
+This project is a single-page application (SPA) built with React, ArcGIS JS API and Vite. It allows for tracking and displaying the real-time locations of British Antarctic Survey (BAS) assets, including ships, aircraft, and vehicles. The application provides embeddable maps for easy integration into public websites like the BAS public website and internal BAS info screens, dynamically updating the asset positions without manual intervention.
+
+### Quick Start
+To set up the project locally, follow these steps:
+
+```shell
+npm install
+npm run dev
+```
+
+### About this codebase:
+The BAS Asset Tracking Map is built using `React` and `Vite`, leveraging `TanStack Router` to manage query parameters for asset identification and rendering. The styling is powered by `Panda CSS` in combination with the `BAS Style Kit` to maintain consistent design aesthetics.
+
+#### Key Features
+- Dynamic Asset Tracking: Displays real-time locations of BAS assets such as ships, aircraft, and vehicles.
+- Embeddable Maps: The maps are designed to be easily embedded into public websites, like Ice Flow.
+- Automatic Centering and Basemap Selection: The map centers on the current position of an asset automatically and selects the most relevant basemap based on the asset's location (e.g., Arctic or Antarctic regions).
+- The application is optimized for size and simplicity, focusing on essential functionalities and a clean user experience.
 
 ## License
 
