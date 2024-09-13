@@ -15,11 +15,11 @@ const globeStyles = sva({
       top: '0',
       right: '0',
       overflow: 'hidden',
-      borderColor: 'white',
+      borderColor: 'grayscale.200',
       borderStyle: 'solid',
       borderWidth: 'thick',
       pointerEvents: 'none',
-      shadow: 'lg',
+      shadow: 'md',
     },
     sceneContainer: {
       position: 'absolute',
