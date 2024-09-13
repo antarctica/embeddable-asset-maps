@@ -1,4 +1,4 @@
-image: node:18-alpine
+
 
 stages:
   - build
@@ -19,6 +19,7 @@ cache:
 # Install dependencies, lint, and build Vite application
 build:
   stage: build
+  image: node:18-alpine
   script:
     - npm ci
     - npm run lint 
@@ -32,6 +33,7 @@ build:
 # Deploy to testing environment
 deploy_to_testing:
   stage: deploy_test
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
     - echo "Deploying to testing environment..."
     - aws s3 sync $DEPLOY_SRC/ s3://$DEPLOY_BUCKET_STAGE --region $AWS_DEFAULT_REGION 
@@ -44,6 +46,7 @@ deploy_to_testing:
 # Manual deployment to production
 deploy_to_production:
   stage: deploy_production
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   script:
     - echo "Deploying to production environment..."
     - aws s3 sync $DEPLOY_SRC/ s3://$DEPLOY_BUCKET_PROD --region $AWS_DEFAULT_REGION 
