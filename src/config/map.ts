@@ -1,7 +1,5 @@
 import Basemap from '@arcgis/core/Basemap';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
-import FeatureEffect from '@arcgis/core/layers/support/FeatureEffect';
-import FeatureFilter from '@arcgis/core/layers/support/FeatureFilter';
 import EsriMap from '@arcgis/core/Map';
 
 import { ASSETFIELDNAME, ASSETLAYERMAPID, ASSETLAYERPORTALID } from './assetLayer';
@@ -82,7 +80,8 @@ let cachedFeatureLayer: __esri.FeatureLayer | undefined;
 export function getAssetFeatureLayer(assetId: string): FeatureLayer {
   if (cachedFeatureLayer) {
     // Update the filter if the assetId has changed
-    cachedFeatureLayer.featureEffect.filter.where = `${ASSETFIELDNAME} = '${assetId}'`;
+    // cachedFeatureLayer.featureEffect.filter.where = `${ASSETFIELDNAME} = '${assetId}'`;
+
     return cachedFeatureLayer;
   }
 
@@ -91,12 +90,14 @@ export function getAssetFeatureLayer(assetId: string): FeatureLayer {
     portalItem: {
       id: ASSETLAYERPORTALID,
     },
-    featureEffect: new FeatureEffect({
-      filter: new FeatureFilter({
-        where: `${ASSETFIELDNAME} = '${assetId}'`,
-      }),
-      excludedEffect: 'opacity(40%) grayscale(50%)',
-    }),
+    definitionExpression: `${ASSETFIELDNAME} = '${assetId}'`,
+
+    // featureEffect: new FeatureEffect({
+    //   filter: new FeatureFilter({
+    //     where: `${ASSETFIELDNAME} = '${assetId}'`,
+    //   }),
+    //   excludedEffect: 'opacity(40%) grayscale(50%)',
+    // }),
   });
 
   return cachedFeatureLayer;

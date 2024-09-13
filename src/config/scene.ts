@@ -19,6 +19,7 @@ export function getSceneMap(assetId?: string): EsriMap {
       id: ASSETLAYERPORTALID,
     },
     labelingInfo: [],
+    definitionExpression: `${ASSETFIELDNAME} = '${assetId}'`,
   });
 
   const uniqueValueRenderer = new UniqueValueRenderer({

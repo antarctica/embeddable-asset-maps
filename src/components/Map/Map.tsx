@@ -32,7 +32,7 @@ export function Map({
           view.constraints = {
             geometry: GLOBAL_EXTENT,
             rotationEnabled: false,
-            minScale: 150000000,
+            minScale: 100000000,
           };
 
           applySymbolRotationCorrection(center, view);
