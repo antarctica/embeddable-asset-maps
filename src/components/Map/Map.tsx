@@ -17,7 +17,7 @@ export function Map({
   center?: [number, number];
   assetId: string;
 }) {
-  const map = React.useMemo(() => {
+  const { map, initialZoom } = React.useMemo(() => {
     return getMap(center, assetId);
   }, [assetId, center]);
 
@@ -25,7 +25,7 @@ export function Map({
     <Box w={'full'} h={'full'} position={'relative'}>
       <ArcMapView
         map={map}
-        zoom={10}
+        zoom={initialZoom}
         center={center}
         onArcgisViewReadyChange={(event) => {
           const view = event.target.view;

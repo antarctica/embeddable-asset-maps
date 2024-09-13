@@ -11,6 +11,25 @@ enum BasemapRegion {
 }
 
 /**
+ * Basemap configuration constant that defines the basemap and initial zoom levels
+ * for different regions.
+ */
+const BASEMAP_CONFIG: Record<BasemapRegion, { basemap: Basemap; initialZoom: number }> = {
+  [BasemapRegion.ANTARCTIC]: {
+    basemap: new Basemap({ portalItem: { id: '435e23642bf94b83b07d1d3fc0c5c9d5' } }),
+    initialZoom: 13,
+  },
+  [BasemapRegion.ARCTIC]: {
+    basemap: new Basemap({ portalItem: { id: 'beee46578bc44e0bb47901f04400588a' } }),
+    initialZoom: 13,
+  },
+  [BasemapRegion.WORLD]: {
+    basemap: Basemap.fromId('streets-navigation-vector'), // Default basemap; will be overridden in `getBasemapConfig`
+    initialZoom: 11,
+  },
+};
+
+/**
  * Given a longitude and latitude pair, returns the basemap region.
  *
  * - Antarctica: latitude < -60
@@ -34,24 +53,23 @@ function getBasemapRegion([, lat]: [number, number]) {
  * Given a longitude and latitude pair, returns a Basemap instance
  * optimized for the region.
  *
- * - Antarctica: latitude < -60
- * - Arctic: latitude > 60
- * - World: otherwise
- *
  * @param {[number, number]} center - the coordinates array
+ * @param {boolean} [isSDA=false] - Whether to use the SDA basemap.
  * @returns {Basemap} the basemap instance
  */
-export function getBasemapConfig(center: [number, number], isSDA: boolean = false): Basemap {
-  const basemapIds = {
-    [BasemapRegion.ANTARCTIC]: '435e23642bf94b83b07d1d3fc0c5c9d5',
-    [BasemapRegion.ARCTIC]: 'beee46578bc44e0bb47901f04400588a',
-    [BasemapRegion.WORLD]: isSDA ? 'oceans' : 'streets-navigation-vector',
-  };
-
+export function getBasemapConfig(
+  center: [number, number],
+  isSDA: boolean = false,
+): { basemap: Basemap; initialZoom: number } {
   const region = getBasemapRegion(center);
-  return region === BasemapRegion.WORLD
-    ? Basemap.fromId(basemapIds[region])
-    : new Basemap({ portalItem: { id: basemapIds[region] } });
+  const config = BASEMAP_CONFIG[region];
+
+  // Override WORLD basemap based on `isSDA`
+  if (region === BasemapRegion.WORLD) {
+    config.basemap = Basemap.fromId(isSDA ? 'oceans' : 'streets-navigation-vector');
+  }
+
+  return config;
 }
 
 /**
@@ -62,12 +80,23 @@ export function getBasemapConfig(center: [number, number], isSDA: boolean = fals
  * @param {string} assetId - the id of the asset
  * @returns {EsriMap} an EsriMap instance
  */
-export function getMap(center: [number, number], assetId: string) {
+export function getMap(
+  center: [number, number],
+  assetId: string,
+): {
+  map: EsriMap;
+  initialZoom: number;
+} {
   const isSDA = assetId === SDA_ASSETID;
-  return new EsriMap({
-    basemap: getBasemapConfig(center, isSDA),
-    layers: [getAssetFeatureLayer(assetId)],
-  });
+  const { basemap, initialZoom } = getBasemapConfig(center, isSDA);
+
+  return {
+    map: new EsriMap({
+      basemap,
+      layers: [getAssetFeatureLayer(assetId)],
+    }),
+    initialZoom,
+  };
 }
 
 let cachedFeatureLayer: __esri.FeatureLayer | undefined;
