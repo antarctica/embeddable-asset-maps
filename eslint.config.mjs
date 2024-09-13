@@ -14,7 +14,7 @@ const compat = new FlatCompat();
 
 export default tseslint.config({
   files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
-  ignores: ['**/dist/**', '**/node_modules/**'],
+  ignores: ['**/dist/**', '**/node_modules/**', 'styled-system/**'],
   extends: [
     pluginJs.configs.recommended,
     pluginReact.configs.flat.recommended,
