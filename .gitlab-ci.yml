@@ -1,0 +1,56 @@
+image: node:18-alpine
+
+stages:
+  - build
+  - deploy_test
+  - deploy_production
+
+variables:
+  DEPLOY_SRC: dist
+  DEPLOY_BUCKET_STAGE: assets-embedded-maps-testing.data.bas.ac.uk
+  DEPLOY_BUCKET_PROD: assets-embedded-maps.data.bas.ac.uk
+  AWS_DEFAULT_REGION: eu-west-1
+
+# Cache node_modules for faster builds
+cache:
+  paths:
+    - node_modules/
+
+# Install dependencies, lint, and build Vite application
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run lint 
+    - npm run build
+  artifacts:
+    paths:
+      - $DEPLOY_SRC/
+  only:
+    - main
+
+# Deploy to testing environment
+deploy_to_testing:
+  stage: deploy_test
+  script:
+    - echo "Deploying to testing environment..."
+    - aws s3 sync $DEPLOY_SRC/ s3://$DEPLOY_BUCKET_STAGE --region $AWS_DEFAULT_REGION 
+  environment:
+    name: testing
+    url: https://$DEPLOY_BUCKET_STAGE
+  only:
+    - main
+
+# Manual deployment to production
+deploy_to_production:
+  stage: deploy_production
+  script:
+    - echo "Deploying to production environment..."
+    - aws s3 sync $DEPLOY_SRC/ s3://$DEPLOY_BUCKET_PROD --region $AWS_DEFAULT_REGION 
+  environment:
+    name: production
+    url: https://$DEPLOY_BUCKET_PROD
+  when: manual
+  only:
+    - main
+  allow_failure: false

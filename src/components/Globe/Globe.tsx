@@ -1,4 +1,4 @@
-import { css } from '@styled-system/css';
+import { sva } from '@styled-system/css';
 import { Box, Circle } from '@styled-system/jsx';
 import React from 'react';
 
@@ -6,6 +6,38 @@ import { ArcSceneView } from '@/arcgis/ArcView/ArcSceneView';
 import { useCurrentMapView, useViewState, useWatchEffect } from '@/arcgis/hooks';
 import { getSceneMap } from '@/config/scene';
 import { Route } from '@/routes/__root';
+
+const globeStyles = sva({
+  slots: ['wrapper', 'sceneContainer', 'scene3DShadow'],
+  base: {
+    wrapper: {
+      position: 'absolute',
+      top: '0',
+      right: '0',
+      overflow: 'hidden',
+      borderColor: 'white',
+      borderStyle: 'solid',
+      borderWidth: 'thick',
+      pointerEvents: 'none',
+      shadow: 'lg',
+    },
+    sceneContainer: {
+      position: 'absolute',
+      w: '[200%]',
+      h: '[200%]',
+      left: '[-50%]',
+      top: '[-50%]',
+      inset: '0',
+      pointerEvents: 'none',
+    },
+    scene3DShadow: {
+      opacity: '[0.4]',
+      mixBlendMode: 'hard-light',
+      pointerEvents: 'none',
+      backgroundGradient: '[radial-gradient(circle at 20px 20px, #ffffff8d 20%, #000 80%)]',
+    },
+  },
+});
 
 export function Globe() {
   const { asset_id } = Route.useSearch();
@@ -38,33 +70,13 @@ export function Globe() {
 
   return (
     <Circle
-      className={css({
-        position: 'absolute',
-        top: '0',
-        right: '0',
-        overflow: 'hidden',
-        borderColor: 'white',
-        borderStyle: 'solid',
-        borderWidth: 'thick',
-        pointerEvents: 'none',
-        shadow: 'lg',
-      })}
+      className={globeStyles().wrapper}
       size={{
         base: '40',
         md: '64',
       }}
     >
-      <Box
-        className={css({
-          position: 'absolute',
-          w: '[200%]',
-          h: '[200%]',
-          left: '[-50%]',
-          top: '[-50%]',
-          inset: '0',
-          pointerEvents: 'none',
-        })}
-      >
+      <Box className={globeStyles().sceneContainer}>
         <ArcSceneView
           id="ref-globe"
           map={map}
@@ -96,12 +108,7 @@ export function Globe() {
           base: '40',
           md: '64',
         }}
-        className={css({
-          opacity: '[0.4]',
-          mixBlendMode: 'hard-light',
-          pointerEvents: 'none',
-          backgroundGradient: '[radial-gradient(circle at 20px 20px, #ffffff8d 20%, #000 80%)]',
-        })}
+        className={globeStyles().scene3DShadow}
       ></Circle>
     </Circle>
   );

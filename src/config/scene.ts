@@ -5,15 +5,22 @@ import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 
 import { ASSETFIELDNAME, ASSETLAYERMAPID, ASSETLAYERPORTALID } from './assetLayer';
 
-const MAP_ASSET_FEATURELAYER = new FeatureLayer({
-  id: ASSETLAYERMAPID,
-  portalItem: {
-    id: ASSETLAYERPORTALID,
-  },
-  labelingInfo: [],
-});
+/**
+ * Returns an EsriMap instance with a satellite basemap and a feature layer
+ * containing the asset with the given assetId.
+ *
+ * @param {string} [assetId] - the id of the asset to filter on the layer
+ * @returns {EsriMap} an EsriMap instance
+ */
+export function getSceneMap(assetId?: string): EsriMap {
+  const featureLayer = new FeatureLayer({
+    id: ASSETLAYERMAPID,
+    portalItem: {
+      id: ASSETLAYERPORTALID,
+    },
+    labelingInfo: [],
+  });
 
-export function getSceneMap(assetId?: string) {
   const uniqueValueRenderer = new UniqueValueRenderer({
     field: ASSETFIELDNAME,
     uniqueValueInfos: [
@@ -39,11 +46,11 @@ export function getSceneMap(assetId?: string) {
     }),
   });
 
-  MAP_ASSET_FEATURELAYER.renderer = uniqueValueRenderer;
+  featureLayer.renderer = uniqueValueRenderer;
 
   return new EsriMap({
     basemap: 'satellite',
-    layers: [MAP_ASSET_FEATURELAYER],
+    layers: [featureLayer],
     ground: undefined,
   });
 }
