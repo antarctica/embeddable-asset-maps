@@ -2,7 +2,7 @@ import Basemap from '@arcgis/core/Basemap';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import EsriMap from '@arcgis/core/Map';
 
-import { ASSETFIELDNAME, ASSETLAYERMAPID, ASSETLAYERPORTALID } from './assetLayer';
+import { ASSETFIELDNAME, ASSETLAYERMAPID, ASSETLAYERPORTALID, SDA_ASSETID } from './assetLayer';
 
 enum BasemapRegion {
   ANTARCTIC = 'ANTARCTIC',
@@ -41,11 +41,11 @@ function getBasemapRegion([, lat]: [number, number]) {
  * @param {[number, number]} center - the coordinates array
  * @returns {Basemap} the basemap instance
  */
-export function getBasemapConfig(center: [number, number]): Basemap {
+export function getBasemapConfig(center: [number, number], isSDA: boolean = false): Basemap {
   const basemapIds = {
     [BasemapRegion.ANTARCTIC]: '435e23642bf94b83b07d1d3fc0c5c9d5',
     [BasemapRegion.ARCTIC]: 'beee46578bc44e0bb47901f04400588a',
-    [BasemapRegion.WORLD]: 'streets-navigation-vector',
+    [BasemapRegion.WORLD]: isSDA ? 'oceans' : 'streets-navigation-vector',
   };
 
   const region = getBasemapRegion(center);
@@ -63,8 +63,9 @@ export function getBasemapConfig(center: [number, number]): Basemap {
  * @returns {EsriMap} an EsriMap instance
  */
 export function getMap(center: [number, number], assetId: string) {
+  const isSDA = assetId === SDA_ASSETID;
   return new EsriMap({
-    basemap: getBasemapConfig(center),
+    basemap: getBasemapConfig(center, isSDA),
     layers: [getAssetFeatureLayer(assetId)],
   });
 }
