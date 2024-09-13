@@ -25,7 +25,7 @@ export function Map({
     <Box w={'full'} h={'full'} position={'relative'}>
       <ArcMapView
         map={map}
-        zoom={13}
+        zoom={10}
         center={center}
         onArcgisViewReadyChange={(event) => {
           const view = event.target.view;
