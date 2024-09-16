@@ -25,7 +25,7 @@ const BASEMAP_CONFIG: Record<BasemapRegion, { basemap: Basemap; initialZoom: num
   },
   [BasemapRegion.WORLD]: {
     basemap: Basemap.fromId('streets-navigation-vector'), // Default basemap; will be overridden in `getBasemapConfig`
-    initialZoom: 11,
+    initialZoom: 10,
   },
 };
 
