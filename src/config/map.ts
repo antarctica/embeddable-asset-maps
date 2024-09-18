@@ -2,7 +2,7 @@ import Basemap from '@arcgis/core/Basemap';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import EsriMap from '@arcgis/core/Map';
 
-import { ASSETFIELDNAME, ASSETLAYERMAPID, ASSETLAYERPORTALID, SDA_ASSETID } from './assetLayer';
+import { ASSETFIELDNAME, ASSETLAYERMAPID, ASSETLAYERPORTALID } from './assetLayer';
 
 enum BasemapRegion {
   ANTARCTIC = 'ANTARCTIC',
@@ -24,7 +24,7 @@ const BASEMAP_CONFIG: Record<BasemapRegion, { basemap: Basemap; initialZoom: num
     initialZoom: 13,
   },
   [BasemapRegion.WORLD]: {
-    basemap: Basemap.fromId('streets-navigation-vector'), // Default basemap; will be overridden in `getBasemapConfig`
+    basemap: new Basemap({ portalItem: { id: '67ab7f7c535c4687b6518e6d2343e8a2' } }),
     initialZoom: 10,
   },
 };
@@ -57,17 +57,12 @@ function getBasemapRegion([, lat]: [number, number]) {
  * @param {boolean} [isSDA=false] - Whether to use the SDA basemap.
  * @returns {Basemap} the basemap instance
  */
-export function getBasemapConfig(
-  center: [number, number],
-  isSDA: boolean = false,
-): { basemap: Basemap; initialZoom: number } {
+export function getBasemapConfig(center: [number, number]): {
+  basemap: Basemap;
+  initialZoom: number;
+} {
   const region = getBasemapRegion(center);
   const config = BASEMAP_CONFIG[region];
-
-  // Override WORLD basemap based on `isSDA`
-  if (region === BasemapRegion.WORLD) {
-    config.basemap = Basemap.fromId(isSDA ? 'oceans' : 'streets-navigation-vector');
-  }
 
   return config;
 }
@@ -87,8 +82,7 @@ export function getMap(
   map: EsriMap;
   initialZoom: number;
 } {
-  const isSDA = assetId === SDA_ASSETID;
-  const { basemap, initialZoom } = getBasemapConfig(center, isSDA);
+  const { basemap, initialZoom } = getBasemapConfig(center);
 
   return {
     map: new EsriMap({
