@@ -58,7 +58,13 @@ function calculateBearing(x1, y1, x2, y2) {
 }
 
 var projectedPos = latLonToEPSG3031($feature.lat_dd, $feature.lon_dd);
-var bearingFromPole = calculateBearing(projectedPos[0], projectedPos[1], -90, 0);
+var projectedPole = latLonToEPSG3031(-90, 0);
+var bearingFromPole = calculateBearing(
+  projectedPos[0],
+  projectedPos[1],
+  projectedPole[0],
+  projectedPole[1],
+);
 var heading = $feature.heading_d;
 
 // add a rotation to bring the symbol to be north facing initially
